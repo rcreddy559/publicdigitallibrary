@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: public-digital-library
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/trading-journal
+    username: postgres
+    password: admin
+    pool:
+      enabled: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/trading-journal
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: always
+
+server:
+  port: 8989

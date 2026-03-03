@@ -1,0 +1,24 @@
+meta {
+  name: Create Dashboard
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{base-library-Url}}/api/dashboards
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "widgetName": "Loans by Month",
+    "widgetType": "BAR_CHART",
+    "status": "ACTIVE",
+    "displayOrder": 4
+  }
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Update Dashboard
+  type: http
+  seq: 14
+}
+
+put {
+  url: {{base-library-Url}}/api/dashboards/1
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "widgetName": "User Activity Daily",
+    "widgetType": "LINE_CHART",
+    "status": "ACTIVE",
+    "displayOrder": 1
+  }
+}

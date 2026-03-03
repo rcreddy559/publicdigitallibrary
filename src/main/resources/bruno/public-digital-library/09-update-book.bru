@@ -1,0 +1,25 @@
+meta {
+  name: Update Book
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{base-library-Url}}/api/books/1
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "title": "Reactive Spring Second Edition",
+    "author": "Josh Long",
+    "isbn": "ISBN-1001",
+    "publishedYear": 2024,
+    "available": true
+  }
+}

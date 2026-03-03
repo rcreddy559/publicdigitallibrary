@@ -1,0 +1,18 @@
+package com.library.service;
+
+import com.library.model.LibraryUser;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+public interface UserService {
+
+    Mono<LibraryUser> createUser(LibraryUser user);
+
+    Flux<LibraryUser> getAllUsers();
+
+    Mono<LibraryUser> getUserById(Long id);
+
+    Mono<LibraryUser> updateUser(Long id, LibraryUser user);
+
+    Mono<Void> deleteUser(Long id);
+}
