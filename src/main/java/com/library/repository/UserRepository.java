@@ -7,6 +7,6 @@ import reactor.core.publisher.Mono;
 
 public interface UserRepository extends ReactiveCrudRepository<LibraryUser, Long> {
 
-    @Query("SELECT COUNT(*) FROM library_user WHERE active = true")
+    @Query("SELECT COUNT(*) FROM \"library_user\" WHERE \"active\" = true")
     Mono<Long> countActiveUsers();
 }
