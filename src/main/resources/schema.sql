@@ -7,7 +7,10 @@ CREATE TABLE "library_user" (
     "full_name" VARCHAR(120) NOT NULL,
     "email" VARCHAR(120) UNIQUE NOT NULL,
     "phone" VARCHAR(30),
-    "active" BOOLEAN NOT NULL DEFAULT TRUE
+    "active" BOOLEAN NOT NULL DEFAULT TRUE,
+    "role" VARCHAR(30) NOT NULL DEFAULT 'READER',
+    CONSTRAINT "library_user_role_check"
+        CHECK ("role" IN ('READER', 'STUDENT', 'ADMIN', 'LIBRARIAN', 'GUEST'))
 );
 
 CREATE TABLE "book" (

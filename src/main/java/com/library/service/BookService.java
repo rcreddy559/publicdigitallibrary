@@ -1,18 +1,19 @@
 package com.library.service;
 
+import com.library.dto.BookResponse;
 import com.library.model.Book;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface BookService {
 
-    Mono<Book> createBook(Book book);
+    Mono<BookResponse> createBook(Book book);
 
-    Flux<Book> getAllBooks();
+    Flux<BookResponse> getAllBooks();
 
-    Mono<Book> getBookById(Long id);
+    Mono<BookResponse> getBookById(Long id);
 
-    Mono<Book> updateBook(Long id, Book book);
+    Mono<BookResponse> updateBook(Long id, Book book);
 
     Mono<Void> deleteBook(Long id);
 }

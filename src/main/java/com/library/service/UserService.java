@@ -1,6 +1,8 @@
 package com.library.service;
 
+import com.library.dto.UserSummary;
 import com.library.model.LibraryUser;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,4 +17,6 @@ public interface UserService {
     Mono<LibraryUser> updateUser(Long id, LibraryUser user);
 
     Mono<Void> deleteUser(Long id);
+
+    Mono<UserSummary> getSummary(String role);
 }

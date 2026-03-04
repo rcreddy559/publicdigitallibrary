@@ -1,11 +1,17 @@
 package com.library.service.impl;
 
+import java.util.Locale;
+
+import org.springframework.stereotype.Service;
+
+import com.library.dto.UserSummary;
+import com.library.exception.UserEmailAlreadyExistsException;
 import com.library.exception.UserNotFoundException;
 import com.library.model.LibraryUser;
 import com.library.repository.UserRepository;
 import com.library.service.UserService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -13,12 +19,17 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private static final String DEFAULT_USER_ROLE = "READER";
+
     private final UserRepository userRepository;
 
     @Override
     public Mono<LibraryUser> createUser(LibraryUser user) {
         user.setId(null);
-        return userRepository.save(user);
+        user.setRole(normalizeRole(user.getRole()));
+        return userRepository.findByEmail(user.getEmail())
+                .flatMap(existing -> Mono.<LibraryUser>error(new UserEmailAlreadyExistsException(user.getEmail())))
+                .switchIfEmpty(userRepository.save(user));
     }
 
     @Override
@@ -36,11 +47,27 @@ public class UserServiceImpl implements UserService {
     public Mono<LibraryUser> updateUser(Long id, LibraryUser user) {
         return getUserById(id)
                 .flatMap(existing -> {
-                    existing.setFullName(user.getFullName());
-                    existing.setEmail(user.getEmail());
-                    existing.setPhone(user.getPhone());
-                    existing.setActive(user.getActive());
-                    return userRepository.save(existing);
+                    return userRepository.findByEmail(user.getEmail())
+                            .flatMap(byEmail -> {
+                                if (!byEmail.getId().equals(existing.getId())) {
+                                    return Mono
+                                            .<LibraryUser>error(new UserEmailAlreadyExistsException(user.getEmail()));
+                                }
+                                return Mono.just(existing);
+                            })
+                            .switchIfEmpty(Mono.just(existing))
+                            .flatMap(current -> {
+                                current.setFullName(user.getFullName());
+                                current.setEmail(user.getEmail());
+                                current.setPhone(user.getPhone());
+                                current.setActive(user.getActive());
+                                if (user.getRole() == null || user.getRole().isBlank()) {
+                                    current.setRole(normalizeRole(current.getRole()));
+                                } else {
+                                    current.setRole(normalizeRole(user.getRole()));
+                                }
+                                return userRepository.save(current);
+                            });
                 });
     }
 
@@ -48,4 +75,19 @@ public class UserServiceImpl implements UserService {
     public Mono<Void> deleteUser(Long id) {
         return getUserById(id).flatMap(existing -> userRepository.deleteById(existing.getId()));
     }
+
+    private String normalizeRole(String role) {
+        if (role == null || role.isBlank()) {
+            return DEFAULT_USER_ROLE;
+        }
+        return role.trim().toUpperCase(Locale.ROOT);
+    }
+
+    @Override
+    public Mono<UserSummary> getSummary(String role) {
+
+       return Mono.empty();
+
+    }
+
 }

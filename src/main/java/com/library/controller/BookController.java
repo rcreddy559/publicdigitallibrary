@@ -1,5 +1,6 @@
 package com.library.controller;
 
+import com.library.dto.BookResponse;
 import com.library.model.Book;
 import com.library.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -25,22 +26,22 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Book> create(@RequestBody Book book) {
+    public Mono<BookResponse> create(@RequestBody Book book) {
         return bookService.createBook(book);
     }
 
     @GetMapping
-    public Flux<Book> getAll() {
+    public Flux<BookResponse> getAll() {
         return bookService.getAllBooks();
     }
 
     @GetMapping("/{id}")
-    public Mono<Book> getById(@PathVariable Long id) {
+    public Mono<BookResponse> getById(@PathVariable Long id) {
         return bookService.getBookById(id);
     }
 
     @PutMapping("/{id}")
-    public Mono<Book> update(@PathVariable Long id, @RequestBody Book book) {
+    public Mono<BookResponse> update(@PathVariable Long id, @RequestBody Book book) {
         return bookService.updateBook(id, book);
     }
 

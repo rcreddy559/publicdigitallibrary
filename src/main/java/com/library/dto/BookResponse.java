@@ -1,4 +1,4 @@
-package com.library.model;
+package com.library.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,21 +7,17 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import reactor.core.publisher.Flux;
 
-@Table("library_user")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LibraryUser {
+public class BookResponse {
 
-    @Id
     private Long id;
-    @Column("full_name")
-    private String fullName;
-    private String email;
-    private String phone;
-    private Boolean active;
-    private String role;
+    private String title;
+    private String author;
+    private String isbn;
+    private Integer publishedYear;
+    private Boolean available;
 }

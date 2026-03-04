@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DashboardNotFoundException.class)
     public ResponseEntity<ApiError> handleDashboardNotFound(DashboardNotFoundException ex, ServerWebExchange exchange) {
         return buildError(HttpStatus.NOT_FOUND, ex.getMessage(), exchange.getRequest().getPath().value());
+    }
+
+    @ExceptionHandler(UserEmailAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleUserEmailAlreadyExists(UserEmailAlreadyExistsException ex, ServerWebExchange exchange) {
+        return buildError(HttpStatus.CONFLICT, ex.getMessage(), exchange.getRequest().getPath().value());
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<ApiError> handleDuplicateKey(DuplicateKeyException ex, ServerWebExchange exchange) {
+        return buildError(HttpStatus.CONFLICT, ex.getMessage(), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(Exception.class)

@@ -9,4 +9,8 @@ public interface UserRepository extends ReactiveCrudRepository<LibraryUser, Long
 
     @Query("SELECT COUNT(*) FROM \"library_user\" WHERE \"active\" = true")
     Mono<Long> countActiveUsers();
+
+    Mono<LibraryUser> findByEmail(String email);
+
+    Mono<LibraryUser> findByRole(String role);
 }
