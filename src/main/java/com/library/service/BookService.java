@@ -1,5 +1,8 @@
 package com.library.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.library.dto.BookResponse;
 import com.library.model.Book;
 import reactor.core.publisher.Flux;
@@ -16,4 +19,9 @@ public interface BookService {
     Mono<BookResponse> updateBook(Long id, Book book);
 
     Mono<Void> deleteBook(Long id);
+
+    Flux<BookResponse> sortBy(String sortBy, String order);
+
+    public Mono<Map<String, List<BookResponse>>> getBooksByAuthor();
+
 }

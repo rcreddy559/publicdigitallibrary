@@ -4,6 +4,10 @@ import com.library.dto.BookResponse;
 import com.library.model.Book;
 import com.library.service.BookService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,4 +54,15 @@ public class BookController {
     public Mono<Void> delete(@PathVariable Long id) {
         return bookService.deleteBook(id);
     }
+
+    @GetMapping("/sort/{sortBy}/{order}")
+    public Flux<BookResponse> sortBy(@PathVariable String sortBy, @PathVariable String order) {
+        return bookService.sortBy(sortBy, order);
+    }
+
+    @GetMapping("/author")
+    public Mono<Map<String, List<BookResponse>>> getBooksByAuthor() {
+        return bookService.getBooksByAuthor();
+    }
+
 }
