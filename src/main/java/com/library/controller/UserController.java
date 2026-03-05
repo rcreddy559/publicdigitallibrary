@@ -21,6 +21,9 @@ import com.library.dto.UserSummary;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -58,5 +61,15 @@ public class UserController {
     @GetMapping("/summary")
     public Mono<UserSummary> getSummary(String role) {
         return userService.getSummary(role);
+    }
+
+    @GetMapping("/groupbyactive")
+    public Mono<Map<Boolean, List<LibraryUser>>> groupByActive() {
+        return userService.getAllUsersGroupedBy();
+    }
+
+    @GetMapping("/activecount")
+    public Mono<Map<String, Long>> getAllUsersActiveAndInActiveCount() {
+        return userService.getAllUsersActiveAndInActiveCount();
     }
 }

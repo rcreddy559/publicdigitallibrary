@@ -6,6 +6,9 @@ import com.library.model.LibraryUser;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.Map;
+
 public interface UserService {
 
     Mono<LibraryUser> createUser(LibraryUser user);
@@ -19,4 +22,8 @@ public interface UserService {
     Mono<Void> deleteUser(Long id);
 
     Mono<UserSummary> getSummary(String role);
+
+    Mono<Map<Boolean, List<LibraryUser>>> getAllUsersGroupedBy();
+
+    Mono<Map<String, Long>> getAllUsersActiveAndInActiveCount();
 }

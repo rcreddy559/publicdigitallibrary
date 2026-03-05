@@ -1,6 +1,9 @@
 package com.library.service.impl;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,11 +15,13 @@ import com.library.repository.UserRepository;
 import com.library.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private static final String DEFAULT_USER_ROLE = "READER";
@@ -34,6 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Flux<LibraryUser> getAllUsers() {
+        activateAllUsers();
         return userRepository.findAll();
     }
 
@@ -50,8 +56,7 @@ public class UserServiceImpl implements UserService {
                     return userRepository.findByEmail(user.getEmail())
                             .flatMap(byEmail -> {
                                 if (!byEmail.getId().equals(existing.getId())) {
-                                    return Mono
-                                            .<LibraryUser>error(new UserEmailAlreadyExistsException(user.getEmail()));
+                                    return Mono.error(new UserEmailAlreadyExistsException(user.getEmail()));
                                 }
                                 return Mono.just(existing);
                             })
@@ -86,8 +91,36 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserSummary> getSummary(String role) {
 
-       return Mono.empty();
+        return Mono.empty();
 
+    }
+
+    public void activateAllUsers() {
+        System.out.println("activateAllUsers");
+        Flux<LibraryUser> users = userRepository.findAll();
+        users.flatMap(user -> {
+            if (user.getId() % 2 == 0) {
+                user.setActive(false);
+                user.setFullName(user.getFullName() + ": " + user.getActive());
+            }
+
+            return userRepository.save(user);
+        }).subscribe(user -> {
+            System.out.println("activateAllUsers: " + user.getFullName() + ": " + user.getActive());
+        });
+
+    }
+
+    public Mono<Map<Boolean, List<LibraryUser>>> getAllUsersGroupedBy() {
+        return userRepository.findAll()
+                .collect(Collectors.groupingBy(LibraryUser::getActive));
+    }
+
+    public Mono<Map<String, Long>> getAllUsersActiveAndInActiveCount() {
+        activateAllUsers();
+        return userRepository.findAll().collect(Collectors.groupingBy(LibraryUser::getActive, Collectors.counting())).map(res ->
+                Map.of("active", res.getOrDefault(true, 0L),
+                        "inactive", res.getOrDefault(false, 0L)));
     }
 
 }
