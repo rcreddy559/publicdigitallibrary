@@ -39,7 +39,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Flux<LibraryUser> getAllUsers() {
-        activateAllUsers();
+        Mono<Long> justCurrentMono = Mono.just(System.currentTimeMillis());
+        justCurrentMono.subscribe(time -> System.out.println("time1: " + time));
+
+        justCurrentMono.subscribe(time -> System.out.println("time2: " + time));
+
         return userRepository.findAll();
     }
 
@@ -96,7 +100,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public void activateAllUsers() {
-        System.out.println("activateAllUsers");
         Flux<LibraryUser> users = userRepository.findAll();
         users.flatMap(user -> {
             if (user.getId() % 2 == 0) {
@@ -117,10 +120,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public Mono<Map<String, Long>> getAllUsersActiveAndInActiveCount() {
-        activateAllUsers();
-        return userRepository.findAll().collect(Collectors.groupingBy(LibraryUser::getActive, Collectors.counting())).map(res ->
-                Map.of("active", res.getOrDefault(true, 0L),
-                        "inactive", res.getOrDefault(false, 0L)));
+
+        return userRepository.findAll().collect(Collectors.groupingBy(LibraryUser::getActive, Collectors.counting()))
+                .map(res -> Map.of("Active", res.getOrDefault(true, 0L),
+                        "Inactive", res.getOrDefault(false, 0L)));
     }
 
 }
