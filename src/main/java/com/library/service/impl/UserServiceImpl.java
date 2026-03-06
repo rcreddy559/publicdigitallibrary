@@ -114,15 +114,20 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public Mono<Map<Boolean, List<LibraryUser>>> getAllUsersGroupedBy() {
+    @Override
+    public Mono<Map<String, List<LibraryUser>>> getAllUsersGroupedBy() {
         return userRepository.findAll()
-                .collect(Collectors.groupingBy(LibraryUser::getActive));
+                .collect(Collectors.groupingBy(LibraryUser::getActive))
+                .map(res -> Map.of("Active", res.getOrDefault(true, List.of()),
+                        "Inactive", res.getOrDefault(false, List.of())));
     }
 
+    @Override
     public Mono<Map<String, Long>> getAllUsersActiveAndInActiveCount() {
 
         return userRepository.findAll().collect(Collectors.groupingBy(LibraryUser::getActive, Collectors.counting()))
-                .map(res -> Map.of("Active", res.getOrDefault(true, 0L),
+                .map(res -> Map.of(
+                        "Active", res.getOrDefault(true, 0L),
                         "Inactive", res.getOrDefault(false, 0L)));
     }
 

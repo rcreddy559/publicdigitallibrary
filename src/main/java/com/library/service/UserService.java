@@ -23,7 +23,7 @@ public interface UserService {
 
     Mono<UserSummary> getSummary(String role);
 
-    Mono<Map<Boolean, List<LibraryUser>>> getAllUsersGroupedBy();
+    Mono<Map<String, List<LibraryUser>>> getAllUsersGroupedBy();
 
     Mono<Map<String, Long>> getAllUsersActiveAndInActiveCount();
 }

@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/groupbyactive")
-    public Mono<Map<Boolean, List<LibraryUser>>> groupByActive() {
+    public Mono<Map<String, List<LibraryUser>>> groupByActive() {
         return userService.getAllUsersGroupedBy();
     }
 
